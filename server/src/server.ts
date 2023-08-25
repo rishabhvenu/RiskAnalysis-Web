@@ -7,6 +7,8 @@ import JsonResponse from "./utils/JsonResponse";
 import validator from "validator";
 import MongoStore from "connect-mongo";
 import mongoose from "mongoose";
+import https from "https";
+import fs from "fs";
 
 declare module "express-session" {
   export interface SessionData {
@@ -21,7 +23,7 @@ const PORT = 5050;
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5000",
+    origin: process.env.BASE_URL,
   })
 );
 app.use(express.json());
@@ -35,6 +37,7 @@ app.use(
     resave: true,
     cookie: {
       httpOnly: true,
+      secure: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
     store: MongoStore.create({
@@ -142,4 +145,7 @@ app.delete("/logout", (req, res) => {
   });
 });
 
-app.listen(PORT, () => {});
+https.createServer({
+  key: fs.readFileSync(process.env.KEY),
+  cert: fs.readFileSync(process.env.CERT)
+}, app).listen(PORT);

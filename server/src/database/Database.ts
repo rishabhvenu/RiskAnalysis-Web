@@ -41,12 +41,9 @@ class Database {
 
   private async find(field, variable) {
     const option = {};
-    option[field] = variable;
+    option[field] = {"$regex": `^${variable}$`, "$options" : "i"};
 
-    return await User.findOne(option).collation({
-      locale: "en",
-      strength: 2,
-    });
+    return await User.findOne(option);
   }
 }
 
