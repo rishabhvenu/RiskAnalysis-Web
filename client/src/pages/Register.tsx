@@ -93,7 +93,7 @@ class RegisterPage extends React.Component<RegisterProps> {
       "email",
       async (value: string) => {
         const code = (
-          await axios.get(`http://localhost:5050/register/email?email=${value}`)
+          await axios.get(`${import.meta.env.VITE_BASE_URL}/register/email?email=${value}`)
         ).data.code;
         if (code == 0) {
           this.email = value;
@@ -117,7 +117,7 @@ class RegisterPage extends React.Component<RegisterProps> {
       async (value: string) => {
         const code = (
           await axios.get(
-            `http://localhost:5050/register/username?username=${value}`
+            `${import.meta.env.VITE_BASE_URL}/register/username?username=${value}`
           )
         ).data.code;
 
@@ -138,7 +138,7 @@ class RegisterPage extends React.Component<RegisterProps> {
       async (value: string) => {
         const code = (
           await axios.get(
-            `http://localhost:5050/register/password?password=${value}`
+            `${import.meta.env.VITE_BASE_URL}/register/password?password=${value}`
           )
         ).data.code;
 
@@ -162,7 +162,7 @@ class RegisterPage extends React.Component<RegisterProps> {
           this.setInvalidText("Passwords Don't Match");
           return false;
         }
-        await axios.post("http://localhost:5050/register", {
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/register`, {
           username: this.username,
           email: this.email,
           password: this.password,

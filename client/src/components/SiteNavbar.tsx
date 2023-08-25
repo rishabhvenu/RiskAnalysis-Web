@@ -26,7 +26,7 @@ class SiteNavbarComponent extends React.Component<
   }
 
   async logout() {
-    await axios.delete("http://localhost:5050/logout", {
+    await axios.delete(`${import.meta.env.VITE_BASE_URL}/logout`, {
       withCredentials: true,
     });
 

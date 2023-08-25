@@ -57,7 +57,7 @@ class StockPage extends React.Component<
       this.props.useNavigate("/login");
       return;
     }
-    fetch(`http://${window.location.hostname}:5100/stocks/${this.ticker}/`)
+    fetch(`${import.meta.env.VITE_STOCK_URL}/stocks/${this.ticker}/`)
       .then((response) => response.json())
       .then((data) => this.setState({ data: data, loading: false }));
   }

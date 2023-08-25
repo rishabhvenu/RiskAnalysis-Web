@@ -67,15 +67,16 @@ class LoginPage extends React.Component<LoginProps> {
     });
 
     next_button?.addEventListener("click", async () => {
-      callback(fieldElement.value);
-      const fieldSection = document.querySelector(`.${field}-section`);
-      fieldSection?.classList.add("fold-up");
+      if (await callback(fieldElement.value)) {
+        const fieldSection = document.querySelector(`.${field}-section`);
+        fieldSection?.classList.add("fold-up");
 
-      if (next_field) {
-        const nextFieldSection = document.querySelector(
-          `.${next_field}-section`
-        );
-        nextFieldSection?.classList.remove("folded");
+        if (next_field) {
+          const nextFieldSection = document.querySelector(
+            `.${next_field}-section`
+          );
+          nextFieldSection?.classList.remove("folded");
+        }
       }
     });
   }
@@ -90,17 +91,18 @@ class LoginPage extends React.Component<LoginProps> {
       async (value: string) => {
         const code = (
           await axios.get(
-            `http://localhost:5050/login/username_or_email?login=${value}`
+            `${import.meta.env.VITE_BASE_URL}/login/username_or_email?login=${value}`
           )
         ).data.code;
 
         if (code === 1) {
           this.shake();
           this.setInvalidText("Username/Email Doesnt Exist");
-          return;
+          return false;
         }
 
         this.login = value;
+        return true;
       },
       "icon-user",
       "password"
@@ -110,7 +112,7 @@ class LoginPage extends React.Component<LoginProps> {
       async (value: string) => {
         const code = (
           await axios.post(
-            "http://localhost:5050/login",
+            `${import.meta.env.VITE_BASE_URL}/login`,
             {
               login: this.login,
               password: value,
@@ -124,11 +126,12 @@ class LoginPage extends React.Component<LoginProps> {
         if (code == 1) {
           this.shake();
           this.setInvalidText("Incorrect Password");
-          return;
+          return false;
         }
 
         this.props.useNavigate("/home");
         this.props.useNavigate(0);
+        return true;
       },
       "icon-lock"
     );
